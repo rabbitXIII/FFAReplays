@@ -1,0 +1,65 @@
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL';
+
+CREATE SCHEMA IF NOT EXISTS `wc3` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
+USE `wc3` ;
+
+-- -----------------------------------------------------
+-- Table `wc3`.`replays`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `wc3`.`replays` ;
+
+CREATE  TABLE IF NOT EXISTS `wc3`.`replays` (
+  `id` INT NOT NULL AUTO_INCREMENT ,
+  `upload_user_id` INT NULL ,
+  `name` VARCHAR(80) NOT NULL ,
+  `filepath` VARCHAR(45) NOT NULL ,
+  PRIMARY KEY (`id`, `upload_user_id`) ,
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) ,
+  UNIQUE INDEX `name_UNIQUE` (`name` ASC) ,
+  UNIQUE INDEX `filepath_UNIQUE` (`filepath` ASC) )
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `wc3`.`players`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `wc3`.`players` ;
+
+CREATE  TABLE IF NOT EXISTS `wc3`.`players` (
+  `id` INT NOT NULL AUTO_INCREMENT ,
+  `name` VARCHAR(45) NULL ,
+  PRIMARY KEY (`id`) ,
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) )
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `wc3`.`replay_player`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `wc3`.`replay_player` ;
+
+CREATE  TABLE IF NOT EXISTS `wc3`.`replay_player` (
+  `replay_id` INT NOT NULL ,
+  `apm` INT NOT NULL ,
+  `players_id` INT NOT NULL ,
+  PRIMARY KEY (`replay_id`, `players_id`) ,
+  INDEX `fk_replay_player_players1` (`players_id` ASC) ,
+  CONSTRAINT `fk_replay_player_replays1`
+    FOREIGN KEY (`replay_id` )
+    REFERENCES `wc3`.`replays` (`id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_replay_player_players1`
+    FOREIGN KEY (`players_id` )
+    REFERENCES `wc3`.`players` (`id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
