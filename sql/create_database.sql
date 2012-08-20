@@ -5,7 +5,6 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL';
 CREATE SCHEMA IF NOT EXISTS `wc3` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
 USE `wc3` ;
 
-
 -- -----------------------------------------------------
 -- Create Tank Auth Tables
 -- -----------------------------------------------------
@@ -93,6 +92,34 @@ CREATE TABLE IF NOT EXISTS `users` (
   `modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+=======
+-- -----------------------------------------------------
+-- Table `wc3`.`users`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `wc3`.`users` ;
+
+CREATE  TABLE IF NOT EXISTS `wc3`.`users` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT ,
+  `username` VARCHAR(50) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL ,
+  `password` VARCHAR(255) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL ,
+  `email` VARCHAR(100) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL ,
+  `activated` TINYINT(1) NOT NULL DEFAULT '1' ,
+  `banned` TINYINT(1) NOT NULL DEFAULT '0' ,
+  `ban_reason` VARCHAR(255) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+  `new_password_key` VARCHAR(50) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+  `new_password_requested` DATETIME NULL DEFAULT NULL ,
+  `new_email` VARCHAR(100) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+  `new_email_key` VARCHAR(50) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+  `last_ip` VARCHAR(40) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL ,
+  `last_login` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00' ,
+  `created` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00' ,
+  `modified` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP ,
+  PRIMARY KEY (`id`) )
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8
+COLLATE = utf8_bin;
+
+>>>>>>> 19ca7bef02ea519de6f8a9536bf4a2a7d274856f
 
 -- -----------------------------------------------------
 -- Table `wc3`.`replays`
@@ -101,6 +128,7 @@ DROP TABLE IF EXISTS `wc3`.`replays` ;
 
 CREATE  TABLE IF NOT EXISTS `wc3`.`replays` (
   `id` INT NOT NULL AUTO_INCREMENT ,
+<<<<<<< HEAD
   `upload_user_id` INT NULL ,
   `name` VARCHAR(80) NOT NULL ,
   `filepath` VARCHAR(45) NOT NULL ,
@@ -108,6 +136,21 @@ CREATE  TABLE IF NOT EXISTS `wc3`.`replays` (
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) ,
   UNIQUE INDEX `name_UNIQUE` (`name` ASC) ,
   UNIQUE INDEX `filepath_UNIQUE` (`filepath` ASC) )
+=======
+  `name` VARCHAR(80) NOT NULL ,
+  `filepath` VARCHAR(45) NOT NULL ,
+  `upload_user_id` INT(11) NOT NULL ,
+  PRIMARY KEY (`id`, `upload_user_id`) ,
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) ,
+  UNIQUE INDEX `name_UNIQUE` (`name` ASC) ,
+  UNIQUE INDEX `filepath_UNIQUE` (`filepath` ASC) ,
+  INDEX `fk_replays_users1` (`upload_user_id` ASC) ,
+  CONSTRAINT `fk_replays_users1`
+    FOREIGN KEY (`upload_user_id` )
+    REFERENCES `wc3`.`users` (`id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+>>>>>>> 19ca7bef02ea519de6f8a9536bf4a2a7d274856f
 ENGINE = InnoDB;
 
 
@@ -131,8 +174,14 @@ DROP TABLE IF EXISTS `wc3`.`replay_player` ;
 
 CREATE  TABLE IF NOT EXISTS `wc3`.`replay_player` (
   `replay_id` INT NOT NULL ,
+<<<<<<< HEAD
   `apm` INT NOT NULL ,
   `players_id` INT NOT NULL ,
+=======
+  `players_id` INT NOT NULL ,
+  `apm` INT NOT NULL ,
+  `race_played` ENUM('orc','human','undead','nightelf') NOT NULL ,
+>>>>>>> 19ca7bef02ea519de6f8a9536bf4a2a7d274856f
   PRIMARY KEY (`replay_id`, `players_id`) ,
   INDEX `fk_replay_player_players1` (`players_id` ASC) ,
   CONSTRAINT `fk_replay_player_replays1`
@@ -148,6 +197,75 @@ CREATE  TABLE IF NOT EXISTS `wc3`.`replay_player` (
 ENGINE = InnoDB;
 
 
+<<<<<<< HEAD
+=======
+-- -----------------------------------------------------
+-- Table `wc3`.`user_profiles`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `wc3`.`user_profiles` ;
+
+CREATE  TABLE IF NOT EXISTS `wc3`.`user_profiles` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT ,
+  `user_id` INT(11) NOT NULL ,
+  `country` VARCHAR(20) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+  `website` VARCHAR(255) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+  PRIMARY KEY (`id`) )
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8
+COLLATE = utf8_bin;
+
+
+-- -----------------------------------------------------
+-- Table `wc3`.`user_autologin`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `wc3`.`user_autologin` ;
+
+CREATE  TABLE IF NOT EXISTS `wc3`.`user_autologin` (
+  `key_id` CHAR(32) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL ,
+  `user_id` INT(11) NOT NULL DEFAULT '0' ,
+  `user_agent` VARCHAR(150) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL ,
+  `last_ip` VARCHAR(40) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL ,
+  `last_login` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP ,
+  PRIMARY KEY (`key_id`, `user_id`) )
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8
+COLLATE = utf8_bin;
+
+
+-- -----------------------------------------------------
+-- Table `wc3`.`login_attempts`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `wc3`.`login_attempts` ;
+
+CREATE  TABLE IF NOT EXISTS `wc3`.`login_attempts` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT ,
+  `ip_address` VARCHAR(40) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL ,
+  `login` VARCHAR(50) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL ,
+  `time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP ,
+  PRIMARY KEY (`id`) )
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8
+COLLATE = utf8_bin;
+
+
+-- -----------------------------------------------------
+-- Table `wc3`.`ci_sessions`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `wc3`.`ci_sessions` ;
+
+CREATE  TABLE IF NOT EXISTS `wc3`.`ci_sessions` (
+  `session_id` VARCHAR(40) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL DEFAULT '0' ,
+  `ip_address` VARCHAR(16) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL DEFAULT '0' ,
+  `user_agent` VARCHAR(150) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL ,
+  `last_activity` INT(10) UNSIGNED NOT NULL DEFAULT '0' ,
+  `user_data` TEXT CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL ,
+  PRIMARY KEY (`session_id`) )
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8
+COLLATE = utf8_bin;
+
+
+>>>>>>> 19ca7bef02ea519de6f8a9536bf4a2a7d274856f
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
