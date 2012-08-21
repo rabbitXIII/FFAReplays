@@ -19,7 +19,7 @@ Please place a note with a link to http://w3rep.sourceforge.net/ on your site
 if you use this script.
 ******************************************************************************/
 
-require('w3g-julas-convert.php');
+require_once('w3g-julas-convert.php');
 
 // to know when there is a need to load next block
 define('MAX_DATABLOCK', 1500);
@@ -46,10 +46,10 @@ class Replay {
 		}
 		flock($this->fp, 1);
 		
-		$this->parseheader();/*
-		$this->parsedata();
-		$this->cleanup();
-		*/
+		$this->parseheader();
+		//$this->parsedata();
+		//$this->cleanup();
+		
 		flock($this->fp, 3);
 		fclose($this->fp);
 		unset($this->fp);
