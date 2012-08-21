@@ -98,10 +98,6 @@
 
 				    <!--eqblock-->
 				    <li>
-<<<<<<< HEAD
-				    <li>
-=======
->>>>>>> 19ca7bef02ea519de6f8a9536bf4a2a7d274856f
 				        <section class="block">
 									<a href="#"><img src="<?php echo "$base/images"?>/7-thumb.jpg" alt=""  /></a> 
 										<h2><a href="#">Playing with Style</a></h2> 

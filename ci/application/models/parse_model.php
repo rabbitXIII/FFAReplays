@@ -65,10 +65,12 @@ class Parse_model extends CI_Model {
 	
 	function create_replay($data) {
 	# data is an instance of the replay class as specified by the w3g-julas.php file
-			
-
-
-
+		if($this->db->insert($this->table['replay_info'], $data)) {
+			$replay_id = $this->db->insert_id();
+			return array('replay_id' => $replay_id);
+		}
+		return NULL;
+		
 	}
 
 }
