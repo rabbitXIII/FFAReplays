@@ -1,4 +1,5 @@
-<?php if (!defined('BASEPATH')) exit('No direct script access allowed');
+<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed'); 
+
 /******************************************************************************
 Warcraft III Replay Parser 2.4
 (c) 2003-2010 Juliusz 'Julas' Gonera
@@ -18,7 +19,7 @@ Please place a note with a link to http://w3rep.sourceforge.net/ on your site
 if you use this script.
 ******************************************************************************/
 
-require_once('w3g-julas-convert.php');
+require('w3g-julas-convert.php');
 
 // to know when there is a need to load next block
 define('MAX_DATABLOCK', 1500);
@@ -30,8 +31,12 @@ define('RETRAINING_TIME', 15000);
 class Replay {
 	var $fp, $data, $leave_unknown, $continue_game, $referees, $time, $pause, $leaves, $errors, $header, $game,  $players, $teams, $chat, $filename, $parse_actions, $parse_chat;
 	var $max_datablock = MAX_DATABLOCK;
-	
-	function __construct($filename, $parse_actions=true, $parse_chat=true) {
+	public function __construct(){
+	}
+	function test(){
+		return 1;
+	}
+	function replay($filename, $parse_actions=true, $parse_chat=true) {
 		$this->parse_actions = $parse_actions;
 		$this->parse_chat = $parse_chat;
 		$this->filename = $filename;
@@ -40,11 +45,11 @@ class Replay {
 			exit($this->filename.': Can\'t read replay file');
 		}
 		flock($this->fp, 1);
-	
-		$this->parseheader();
+		
+		$this->parseheader();/*
 		$this->parsedata();
 		$this->cleanup();
-	
+		*/
 		flock($this->fp, 3);
 		fclose($this->fp);
 		unset($this->fp);
@@ -331,7 +336,7 @@ class Replay {
 					$data_left -= 9;
 					break;
 				// LeaveGame
-				case 0x17
+				case 0x17:
 				case 0x54:
 					$this->leaves++;
 					
@@ -956,5 +961,6 @@ class Replay {
 			}
 		}
 	}
-	
 }
+
+/* End of file Replay.php */

@@ -7,6 +7,7 @@ class Uploader extends CI_Controller
     }
     public function upload()
     {
+	$this->load->library('replay');
         error_reporting(E_ALL | E_STRICT);
 
         $this->load->helper("upload.class");
@@ -41,12 +42,5 @@ class Uploader extends CI_Controller
             default:
                 header('HTTP/1.1 405 Method Not Allowed');
         }
-    }
-
-    public function replay() {
-
-
-
-
     }
 }

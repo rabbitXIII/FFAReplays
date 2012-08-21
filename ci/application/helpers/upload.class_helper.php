@@ -17,8 +17,8 @@ class UploadHandler
     function __construct($options=null) {
         $this->options = array(
             'script_url' => $this->getFullUrl().'/',
-            'upload_dir' => dirname($_SERVER['SCRIPT_FILENAME']).'/files/',
-            'upload_url' => $this->getFullUrl().'/files/',
+            'upload_dir' => dirname($_SERVER['SCRIPT_FILENAME']).'/replays/',
+            'upload_url' => $this->getFullUrl().'/replays/',
             'param_name' => 'files',
             // Set the following option to 'POST', if your server does not support
             // DELETE requests. This is a parameter sent to the client:
@@ -106,7 +106,7 @@ class UploadHandler
     protected function get_file_objects() {
         return array_values(array_filter(array_map(
             array($this, 'get_file_object'),
-            scandir($this->options['upload_dir'])
+            scandir('/var/www/files')
         )));
     }
 
@@ -290,6 +290,8 @@ class UploadHandler
     }
 
     protected function handle_file_upload($uploaded_file, $name, $size, $type, $error, $index) {
+	$CI = get_instance();
+	
         $file = new stdClass();
         $file->name = $this->trim_file_name($name, $type, $index);
         $file->size = intval($size);
@@ -336,6 +338,11 @@ class UploadHandler
                         }
                     }
                 }
+		$CI->load->model('Parse_model');
+		$CI->Parse_model->create_replay($file->name);
+		$CI = null;
+		#copy($file_path, "/var/www/replays/".$file->name);
+		#unlink($file_path);
             } else if ($this->options['discard_aborted_uploads']) {
                 unlink($file_path);
                 $file->error = 'abort';

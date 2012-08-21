@@ -6,7 +6,9 @@ class Parse_model extends CI_Model {
 	var $table 	= array( 'player_info' => 'players',
 					'replay_player_info' => 'replay_player',
 					'replay_info' => 'replays');
-	
+	function __construct() {
+		$this->load->library('tank_auth');
+	}
 	function player_exists($player_name) {
                 $this->db->select('1', FALSE);
                 $this->db->where('LOWER(name)=', strtolower($player_name));
@@ -63,8 +65,10 @@ class Parse_model extends CI_Model {
 		return NULL;
 	}
 	
-	function create_replay($data) {
-	# data is an instance of the replay class as specified by the w3g-julas.php file
+	function create_replay($name) {
+		$this->load->library('replay'); // these are to parse the replay as soon as we've uploaded
+		$game_data = $this->replay->replay("/var/www/replays/".$name);
+		$data = array("upload_user_id"=>$this->tank_auth->get_user_id(),"filepath"=>"/var/www/replays/".$name,"name"=>"$name");
 		if($this->db->insert($this->table['replay_info'], $data)) {
 			$replay_id = $this->db->insert_id();
 			return array('replay_id' => $replay_id);
