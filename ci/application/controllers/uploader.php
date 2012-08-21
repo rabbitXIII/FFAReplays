@@ -41,6 +41,12 @@ class Uploader extends CI_Controller
             default:
                 header('HTTP/1.1 405 Method Not Allowed');
         }
+    }
+
+    public function replay() {
+
+
+
 
     }
 }

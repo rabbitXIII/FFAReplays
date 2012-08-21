@@ -27,11 +27,11 @@ define('ACTION_DELAY', 1000);
 // to know how long it may take after buying a Tome of Retraining to retrain a hero
 define('RETRAINING_TIME', 15000);
 
-class replay {
+class Replay {
 	var $fp, $data, $leave_unknown, $continue_game, $referees, $time, $pause, $leaves, $errors, $header, $game,  $players, $teams, $chat, $filename, $parse_actions, $parse_chat;
 	var $max_datablock = MAX_DATABLOCK;
 	
-	function replay($filename, $parse_actions=true, $parse_chat=true) {
+	function Replay($filename, $parse_actions=true, $parse_chat=true) {
 		$this->parse_actions = $parse_actions;
 		$this->parse_chat = $parse_chat;
 		$this->filename = $filename;
@@ -958,4 +958,3 @@ class replay {
 	}
 	
 }
-?>
