@@ -67,8 +67,16 @@ class Parse_model extends CI_Model {
 	
 	function create_replay($name) {
 		$this->load->library('replay'); // these are to parse the replay as soon as we've uploaded
+		// populate the data to be entered into database
 		$game_data = $this->replay->replay("/var/www/replays/".$name);
-		$data = array("upload_user_id"=>$this->tank_auth->get_user_id(),"filepath"=>"/var/www/replays/".$name,"name"=>"$name");
+		$data = array("upload_user_id"=>$this->tank_auth->get_user_id(),"filepath"=>"/var/www/replays/".$name,"name"=>"$name","speed"=>$game_data->game['speed']);
+		$data['map'] = $game_data->game['map'];
+		$data['observers'] = $game_data->game['observers'];
+		$data['version']  = "1.".$game_data->header['major_v']." ".$game_data->header['ident'];
+		$data['players_count'] = $game_data->game['player_count'];
+		$data['game_type'] = $game_data->game['type'];
+		$data['length'] = sprintf('%02d', intval($game_data->header['length']/60000)).':'.sprintf('%02d', intval($game_data->header['length']%60000/1000));
+
 		if($this->db->insert($this->table['replay_info'], $data)) {
 			$replay_id = $this->db->insert_id();
 			return array('replay_id' => $replay_id);

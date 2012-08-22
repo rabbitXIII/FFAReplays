@@ -47,7 +47,7 @@ class Replay {
 		flock($this->fp, 1);
 		
 		$this->parseheader();
-		//$this->parsedata();
+		$this->parsedata();
 		//$this->cleanup();
 		
 		flock($this->fp, 3);
@@ -63,6 +63,7 @@ class Replay {
 		unset($this->ability_delay);
 		unset($this->leave_unknown);
 		unset($this->continue_game);
+		return $this;
 	}
 	
 	// 2.0 [Header]
@@ -91,17 +92,19 @@ class Replay {
 		$blocks_count = $this->header['blocks'];
 		for ($i=0; $i<$blocks_count; $i++) {
 			// 3.0 [Data block header]
+			
 			$block_header = @unpack('vc_size/vu_size/Vchecksum', fread($this->fp, 8));
 			$temp = fread($this->fp, $block_header['c_size']);
 			$temp = substr($temp, 2, -4);
 			// the first bit must be always set, but already set in replays with modified chatlog (why?)
 			$temp{0} = chr(ord($temp{0}) | 1);
+			
 			if ($temp = gzinflate($temp)) {
 				$this->data .= $temp;
 			} else {
 				exit($this->filename.': Incomplete replay file');
 			}
-	
+			
 			// 4.0 [Decompressed data]
 			if ($i == 0) {
 				$this->data = substr($this->data, 4);
@@ -110,12 +113,13 @@ class Replay {
 			} elseif ($blocks_count - $i < 2) {
 				$this->max_datablock = 0;
 			}
-	
+			
 			if ($this->parse_chat || $this->parse_actions) {
 				$this->parseblocks();
 			} else {
 				break;
 			}
+			
 		}
 	}
 	
@@ -274,9 +278,10 @@ class Replay {
 		$data_left = strlen($this->data);
 		$block_id = 0;
 		while ($data_left > $this->max_datablock) {
+		
 			$prev = $block_id;
 			$block_id = ord($this->data{0});
-	
+			
 			switch ($block_id) {
 				// TimeSlot block
 				case 0x1E:
@@ -392,7 +397,9 @@ class Replay {
 				default:
 					exit('Unhandled replay command block at '.convert_time($this->time).': 0x'.sprintf('%02X', $block_id).' (prev: 0x'.sprintf('%02X', $prev).', time: '.$this->time.') in '.$this->filename);
 			}
+			
 		}
+		
 	}
 	
 	// ACTIONS, the best part...
