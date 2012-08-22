@@ -76,7 +76,9 @@ class Parse_model extends CI_Model {
 		$data['players_count'] = $game_data->game['player_count'];
 		$data['game_type'] = $game_data->game['type'];
 		$data['length'] = sprintf('%02d', intval($game_data->header['length']/60000)).':'.sprintf('%02d', intval($game_data->header['length']%60000/1000));
-
+		
+		// add a chat database
+		
 		if($this->db->insert($this->table['replay_info'], $data)) {
 			$replay_id = $this->db->insert_id();
 			return array('replay_id' => $replay_id);
@@ -84,5 +86,24 @@ class Parse_model extends CI_Model {
 		return NULL;
 		
 	}
+/*
+format of the chat log
+  ["player_id"]=>
+  int(2)
+  ["length"]=>
+  int(47)
+  ["flags"]=>
+  int(32)
+  ["mode"]=>
+  int(3)
+  ["text"]=>
+  string(41) "Blue has entire bottom by himself, truce?"
+  ["time"]=>
+  int(208890)
+  ["player_name"]=>
+  string(15) "dkistheirleader"
+
+*/
+
 
 }

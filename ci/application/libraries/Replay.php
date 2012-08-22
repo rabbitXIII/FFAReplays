@@ -290,10 +290,10 @@ class Replay {
 					if (!$this->pause) {
 						$this->time += $temp['time_inc'];
 					}
-					if ($temp['length'] > 2 && $this->parse_actions) {
+			/*		if ($temp['length'] > 2 && $this->parse_actions) {
 						$this->parseactions(substr($this->data, 5, $temp['length']-2), $temp['length']-2);
 					}
-					$this->data = substr($this->data, $temp['length']+3);
+			*/		$this->data = substr($this->data, $temp['length']+3);
 					$data_left -= $temp['length']+3;
 					break;
 				// Player chat message (patch version >= 1.07)
@@ -350,7 +350,7 @@ class Replay {
 					$this->players[$temp['player_id']]['leave_reason'] = $temp['reason'];
 					$this->players[$temp['player_id']]['leave_result'] = $temp['result'];
 					$this->data = substr($this->data, 14);
-					$data_left -= 14;
+					$data_left -= 14;/*
 					if ($this->leave_unknown) {
 						$this->leave_unknown = $temp['unknown'] - $this->leave_unknown;
 					}
@@ -389,13 +389,16 @@ class Replay {
 							case 0x0A: $this->game['loser_team'] = 'tie'; $this->game['winner_team'] = 'tie'; break;
 						}
 					}
-					$this->leave_unknown = $temp['unknown'];
+					$this->leave_unknown = $temp['unknown'];*/
 					break;
 				case 0:
 					$data_left = 0;
 					break;
+				
 				default:
-					exit('Unhandled replay command block at '.convert_time($this->time).': 0x'.sprintf('%02X', $block_id).' (prev: 0x'.sprintf('%02X', $prev).', time: '.$this->time.') in '.$this->filename);
+					$data_left = 0;
+					break;
+				//	exit('Unhandled replay command block at '.convert_time($this->time).': 0x'.sprintf('%02X', $block_id).' (prev: 0x'.sprintf('%02X', $prev).', time: '.$this->time.') in '.$this->filename);
 			}
 			
 		}
