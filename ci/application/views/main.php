@@ -17,7 +17,10 @@
 	<nav>
 		<ul>
 			<li class="selected"><a href="#">Home</a></li>
-			<li><?=anchor("/uploader", "Upload")?></li>
+			<?php if ($loginout == "logout") {
+				echo "<li>" . anchor("/uploader", "Upload") . "</li>";
+				}
+			 ?>
 			<li><?php echo anchor("http://ffamasters.com/league/index.php", "Forums")?></li>
 			<li><a href="#">Azeroth Ladder</a></li>
 			<li><?php echo anchor("/auth/$loginout/", ucfirst($loginout)); ?></li>

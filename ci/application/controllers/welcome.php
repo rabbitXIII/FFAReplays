@@ -17,10 +17,10 @@ class Welcome extends CI_Controller
 			$data['username']	= $this->tank_auth->get_username();
 			$data['loginout'] = 'logout';
 		}
-		$this->load->model('Upload_model');
+		/*$this->load->model('Upload_model');
 		if($this->input->post('upload')) {
 			$this->Upload_model->do_upload();
-		}
+		}*/
 		$this->load->view('main', $data);
 	}
 }

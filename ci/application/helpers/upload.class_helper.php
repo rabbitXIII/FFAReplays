@@ -341,8 +341,6 @@ class UploadHandler
 		$CI->load->model('Parse_model');
 		$CI->Parse_model->create_replay($file->name);
 		$CI = null;
-		#copy($file_path, "/var/www/replays/".$file->name);
-		#unlink($file_path);
             } else if ($this->options['discard_aborted_uploads']) {
                 unlink($file_path);
                 $file->error = 'abort';

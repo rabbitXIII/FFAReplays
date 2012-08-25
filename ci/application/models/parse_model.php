@@ -69,6 +69,7 @@ class Parse_model extends CI_Model {
 		$this->load->library('replay'); // these are to parse the replay as soon as we've uploaded
 		// populate the data to be entered into database
 		$game_data = $this->replay->replay("/var/www/replays/".$name);
+		// $this->tank_auth->get_user_id()	
 		$data = array("upload_user_id"=>$this->tank_auth->get_user_id(),"filepath"=>"/var/www/replays/".$name,"name"=>"$name","speed"=>$game_data->game['speed']);
 		$data['map'] = $game_data->game['map'];
 		$data['observers'] = $game_data->game['observers'];
@@ -78,15 +79,15 @@ class Parse_model extends CI_Model {
 		$data['length'] = sprintf('%02d', intval($game_data->header['length']/60000)).':'.sprintf('%02d', intval($game_data->header['length']%60000/1000));
 			
 		// add a chat database
-		
 		if($this->db->insert($this->table['replay_info'], $data)) {
 			$replay_id = $this->db->insert_id();
 			return array('replay_id' => $replay_id);
 		}
-		return NULL;
 		
+		return NULL;
 	}
 
+/*
 	function save_chat($chat_array){
 		foreach($chat_array as $c){
 			$player_id;
@@ -103,7 +104,6 @@ class Parse_model extends CI_Model {
 		}
 		
 	}
-/*
 format of the chat log
   ["player_id"]=>
   int(2)
@@ -121,6 +121,5 @@ format of the chat log
   string(15) "dkistheirleader"
 
 */
-
 
 }

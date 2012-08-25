@@ -47,7 +47,7 @@ class Replay {
 		flock($this->fp, 1);
 		
 		$this->parseheader();
-		$this->parsedata();
+		//$this->parsedata();
 		//$this->cleanup();
 		
 		flock($this->fp, 3);
