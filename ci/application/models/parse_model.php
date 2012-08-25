@@ -76,7 +76,7 @@ class Parse_model extends CI_Model {
 		$data['players_count'] = $game_data->game['player_count'];
 		$data['game_type'] = $game_data->game['type'];
 		$data['length'] = sprintf('%02d', intval($game_data->header['length']/60000)).':'.sprintf('%02d', intval($game_data->header['length']%60000/1000));
-		
+			
 		// add a chat database
 		
 		if($this->db->insert($this->table['replay_info'], $data)) {
@@ -84,6 +84,23 @@ class Parse_model extends CI_Model {
 			return array('replay_id' => $replay_id);
 		}
 		return NULL;
+		
+	}
+
+	function save_chat($chat_array){
+		foreach($chat_array as $c){
+			$player_id;
+			if(!player_exists($c['player_name'])) {
+				$player_id = create_player($c['player_name']);
+			}
+			$player_id = get_player_by_name($c['player_name'])['id'];
+			
+
+			if($this->db->insert(table['chat_info'], $line)){
+				$chat_id = $this->db->insert_id();
+			}
+
+		}
 		
 	}
 /*
