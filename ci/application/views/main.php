@@ -24,7 +24,7 @@
 			<li><?php echo anchor("http://ffamasters.com/league/index.php", "Forums")?></li>
 			<li><a href="#">Azeroth Ladder</a></li>
 			<li><?php echo anchor("/auth/$loginout/", ucfirst($loginout)); ?></li>
-			<li><?=anchor("/parse/test_replay", 'TEST')?></li>
+			<li><?=anchor("#", 'TEST')?></li>
 		</ul>
 	</nav>
 	<section id="intro">
